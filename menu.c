@@ -9,10 +9,21 @@ void empty_buf(){
 
 /*Make sure that it returns an int*/
 int read_int(){
-  int buf;
-  scanf("%d",&buf);
-  empty_buf();
-  return buf;
+  char buf[6];
+  char num;
+  do{
+    num = 1;
+    scanf("%5s",buf);
+    for(int i=0;i<strlen(buf);i++){
+      if(buf[i] < 48 || buf[i] > 57)
+        num = 0;
+    }
+    empty_buf();
+    if(!num)
+      printf("Input an int please: ");
+  }while(!num);
+
+  return atoi(buf);
 }
 
 /*Returns a list of processes to be scheduled

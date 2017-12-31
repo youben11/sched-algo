@@ -267,7 +267,7 @@ process* sjf(List* processes){
   the Shortest Remaining Time First algorithm
   */
 process* srtf(List* processes){
-  
+
 }
 
 /*Scheduele the process using
