@@ -123,8 +123,9 @@ void sort_arr(List* processes){
   while(!sorted){
     sorted = 1;
     e = processes->first;
+    size--;
 
-    for(int i=0; i<--size; i++){
+    for(int i=0; i<size; i++){
       if(e->proc.t_arr > e->next->proc.t_arr){
         switch_proc(&e->proc, &e->next->proc);
         sorted = 0;
@@ -148,8 +149,9 @@ void sort_exe(List* processes){
   while(!sorted){
     sorted = 1;
     e = processes->first;
+    size--;
 
-    for(int i=0; i<--size; i++){
+    for(int i=0; i<size; i++){
       if(e->proc.t_exe > e->next->proc.t_exe){
         switch_proc(&e->proc, &e->next->proc);
         sorted = 0;
@@ -173,8 +175,9 @@ void sort_rem(List* processes){
   while(!sorted){
     sorted = 1;
     e = processes->first;
+    size--;
 
-    for(int i=0; i<--size; i++){
+    for(int i=0; i<size; i++){
       if(e->proc.t_rem > e->next->proc.t_rem){
         switch_proc(&e->proc, &e->next->proc);
         sorted = 0;
