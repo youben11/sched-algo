@@ -71,7 +71,7 @@ int choose_algo(int* quantum){
 
 /*Print infomation of a process*/
 void print_proc(process* p){
-  printf("name: %c arr_time: %d exec_time: %d end_time: %d\n",p->name,p->t_arr, p->t_exe,p->t_end);
+  printf("name: '%c', arr_time: %d, exec_time: %d, end_time: %d\n",p->name,p->t_arr, p->t_exe,p->t_end);
   execution* e = p->exe;
   while(e != NULL){
     printf("\t from %d to %d\n",e->start, e->end);
@@ -79,9 +79,65 @@ void print_proc(process* p){
   }
 }
 
+/*Returns the average waiting time*/
+float avg_wait(process* procs, int size){
+  float sum = 0;
+  for(int i=0;i<size;i++){
+    sum += procs[i].t_end - procs[i].t_arr - procs[i].t_exe;
+  }
+  return sum / size;
+}
+
+/*Returns the average residence time*/
+float avg_res(process* procs, int size){
+  float sum = 0;
+  for(int i=0;i<size;i++){
+    sum += procs[i].t_end - procs[i].t_arr;
+  }
+  return sum / size;
+}
+
 /*Print Gant diagram and other infomation related
   to scheduling
   */
 void print_info(process* procs, int size){
-  //print all the details of the simulation
+  execution* e = NULL;
+  int end_time = procs[size - 1].t_end;
+  int str_size = end_time + 3;
+  int padd = 2;
+  char** gant = malloc(sizeof(char*) * size);
+
+  for(int i=0;i<size;i++)
+    gant[i] = malloc(sizeof(char) * str_size);
+  for(int i=0;i<str_size;i++)//init the first string with spaces
+    gant[0][i] = ' ';
+  gant[0][str_size-1] = '\0';
+
+  for(int i=1;i<size;i++)//copy the first string into the others
+    memcpy(gant[i],gant[0], sizeof(char) * str_size);
+
+  for(int i=0;i<size;i++){//build the Gant diagram
+    gant[i][0] = procs[i].name;
+    e = procs[i].exe;
+    while(e != NULL){
+      for(int j=e->start+padd;j<e->end+padd;j++)
+        gant[i][j] = '_';
+      e = e->next;
+    }
+  }
+
+  puts("");
+  puts("Gant diagram:");
+  puts("");
+  for(int i=0;i<size;i++)
+    printf("%s\n",gant[i]);
+  puts("");
+  puts("Process execution detail:");
+  puts("");
+  for(int i=0;i<size;i++)
+    print_proc(&procs[i]);
+  puts("");
+  printf("Average waiting time: %f\n", avg_wait(procs, size));
+  printf("Average residence time: %f\n", avg_res(procs, size));
+  puts("");
 }
