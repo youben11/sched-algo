@@ -120,7 +120,6 @@ void sort_arr(List* processes){
   elem* e;
   char sorted = 0;
 
-
   while(!sorted){
     sorted = 1;
     e = processes->first;
@@ -146,7 +145,6 @@ void sort_exe(List* processes){
   elem* e;
   char sorted = 0;
 
-
   while(!sorted){
     sorted = 1;
     e = processes->first;
@@ -171,7 +169,6 @@ void sort_rem(List* processes){
 
   elem* e;
   char sorted = 0;
-
 
   while(!sorted){
     sorted = 1;
@@ -267,7 +264,38 @@ process* sjf(List* processes){
   the Shortest Remaining Time First algorithm
   */
 process* srtf(List* processes){
+  int time = 0;
+  int i = 0;
+  List* arrived = malloc(sizeof(List));
+  arrived->size = 0;
+  arrived->first = NULL;
+  process* p = NULL;
+  process* result = malloc(sizeof(process) * processes->size);
 
+  while(processes->size || arrived->size || p != NULL){
+    if(p != NULL)//last processes didn't end
+      add(arrived, *p);
+    get_arrived(processes, arrived, time);
+    sort_rem(arrived);
+    p = pop(arrived);
+
+    if(p == NULL){//no process has arrived
+      time++;
+      continue;
+    }
+
+    add_exe(p, time, time + 1);
+    time++;
+    p->t_rem--;
+
+    if(p->t_rem == 0){//process ended
+      p->t_end = time;
+      memcpy(result + i, p, sizeof(process));
+      p = NULL;
+      i++;
+    }
+  }
+  return result;
 }
 
 /*Scheduele the process using
@@ -282,7 +310,7 @@ process* rr(List* processes, int quantum){
   process* p = NULL;
   process* result = malloc(sizeof(process) * processes->size);
 
-  while(processes->size || arrived->size){
+  while(processes->size || arrived->size || p != NULL){
     get_arrived(processes, arrived, time);
     if (p != NULL)//last process didn't end
       add(arrived, *p);
