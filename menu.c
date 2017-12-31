@@ -2,6 +2,15 @@
 #define SJF 1
 #define SRTF 2
 #define RR 3
+/*Colors*/
+#define CRED  "\x1B[31m"
+#define CGRN  "\x1B[32m"
+#define CBLU  "\x1B[34m"
+#define CYEL  "\x1B[33m"
+#define CMAG  "\x1B[35m"
+#define CCYN  "\x1B[36m"
+#define CWHT  "\x1B[37m"
+#define CNRM  "\x1B[0m"
 
 void empty_buf(){
   while(getchar() != '\n');
@@ -37,23 +46,27 @@ List* get_procs(){
   process p;
   p.exe = NULL;
 
+  printf(CBLU);//change color to blue
   puts("");
-  printf("How many process do you want? (int) ");
-  n_proc = read_int();
+  do{
+    printf("How many process do you want? (int > 0) ");
+    n_proc = read_int();
+  }while(n_proc <= 0);
 
   for(int i=0;i<n_proc;i++){
     printf("process %d:\n", i+1);
     printf("\tname:(one char) ");
     scanf("%c",&p.name);
     empty_buf();
-    printf("\tarrival time:(int) ");
+    printf("\tarrival time:(int >= 0) ");
     p.t_arr = read_int();
-    printf("\texecution time:(int) ");
+    printf("\texecution time:(int >= 0) ");
     p.t_exe = read_int();
     p.t_rem = p.t_exe;
     add(processes, p);
   }
   puts("");
+  printf(CNRM);//change color to normal
 
   return processes;
 }
@@ -62,6 +75,8 @@ List* get_procs(){
   algorithm to be used*/
 int choose_algo(int* quantum){
   int choice = -1;
+
+  printf(CBLU);//change color to blue
   puts("");
   puts("Choose an algorithm between:");
   puts("0-First Come First Served");
@@ -77,6 +92,7 @@ int choose_algo(int* quantum){
     *quantum = read_int();
   }
   puts("");
+  printf(CNRM);//change color to normal
   return choice;
 }
 
@@ -115,7 +131,7 @@ void print_info(process* procs, int size){
   execution* e = NULL;
   int end_time = procs[size - 1].t_end;
   int str_size = end_time + 3;
-  int padd = 2;
+  int padd = 3;
   char** gant = malloc(sizeof(char*) * size);
 
   for(int i=0;i<size;i++)
@@ -123,6 +139,7 @@ void print_info(process* procs, int size){
   for(int i=0;i<str_size;i++)//init the first string with spaces
     gant[0][i] = ' ';
   gant[0][str_size-1] = '\0';
+  gant[0][2] = '|';
 
   for(int i=1;i<size;i++)//copy the first string into the others
     memcpy(gant[i],gant[0], sizeof(char) * str_size);
@@ -132,23 +149,32 @@ void print_info(process* procs, int size){
     e = procs[i].exe;
     while(e != NULL){
       for(int j=e->start+padd;j<e->end+padd;j++)
-        gant[i][j] = '_';
+        gant[i][j] = '-';
       e = e->next;
     }
   }
 
+  printf(CYEL);//change color to yellow
   puts("");
   puts("Gant diagram:");
   puts("");
+  printf("Process\n\n");
   for(int i=0;i<size;i++)
     printf("%s\n",gant[i]);
+
+  printf("  |");
+  for(int i=0;i<str_size;i++)
+    printf("_");
+  printf(" Time");
+
   puts("");
   puts("Process execution detail:");
   puts("");
   for(int i=0;i<size;i++)
     print_proc(&procs[i]);
   puts("");
-  printf("Average waiting time: %f\n", avg_wait(procs, size));
-  printf("Average residence time: %f\n", avg_res(procs, size));
+  printf("Average waiting time: %.2f\n", avg_wait(procs, size));
+  printf("Average residence time: %.2f\n", avg_res(procs, size));
   puts("");
+  printf(CNRM);//change color to normal
 }

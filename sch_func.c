@@ -7,6 +7,7 @@ typedef struct execution{
   struct execution* next;
 } execution;
 
+/*Process information*/
 typedef struct {
   char name; //process name
   int t_arr; //arrival time
