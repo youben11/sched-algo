@@ -165,7 +165,7 @@ void print_info(process* procs, int size){
   printf("  |");
   for(int i=0;i<str_size;i++)
     printf("_");
-  printf(" Time");
+  printf(" Time\n");
 
   puts("");
   puts("Process execution detail:");

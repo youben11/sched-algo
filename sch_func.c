@@ -46,6 +46,11 @@ void add_exe(process* p, int start, int end){
   while(e->next != NULL)
     e = e->next;
 
+  if(start == e->end){
+    e->end = end;
+    return;
+  }
+
   e->next = malloc(sizeof(execution));
   e->next->start = start;
   e->next->end = end;
